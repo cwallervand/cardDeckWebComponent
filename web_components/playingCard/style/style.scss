@@ -1,0 +1,231 @@
+//Import scss file
+@import	 "../../cssFramework/mixins";
+//Define "variables"
+$red: red;
+$black: black;
+$cardHeightRatio: 1.4;
+$cardMinWidth: 300px;
+$fontSize: 1em;
+
+//Styling the host element of this shadowtree, i.e. the playing-card element
+:host {
+	position: relative;
+	display: inline-block;
+	font-size: $fontSize;
+}
+#card {
+	border: 1px solid #CCC;
+	width: 100%;
+	@include border-radius(5%);
+	position: relative; 
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.container {
+
+		position: relative;
+		height: 100%;
+		display: inline-block;
+
+
+		&.left, &.right {
+			width: 20%;
+		}
+
+		//Left container
+		&.left {
+			float: left;
+		}
+
+		//Middle container
+		&.middle {
+
+			float: left;
+			width:60%;
+			height: 100%;
+			font-size: 1.7em;
+
+			.column {
+
+				width: 33.3%;
+				height: 100%;
+				display: inline-block;
+				position: relative;
+				
+				//Left column
+				&.left {
+					float: left;
+					text-align: left;
+				}
+
+				//Middle column
+				&.middle {
+					float: left;
+					text-align: center;
+				}
+
+				//Right column
+				&.right {
+					float: right;
+					text-align: right;
+				}
+
+				.cardSuit {
+
+					display:none;
+					position: absolute;
+					width: 100%;
+
+					&.top {
+						top: 0;
+					}
+
+					&.topNext {
+						top: 33%;
+						transform: translateY(-33%);
+						position: relative;
+					}
+
+					&.bottomPrev {
+						bottom: 23%;
+						transform: rotateX(180deg);
+					}
+
+					&.bottom {
+						bottom: 0;
+						transform: rotateX(180deg);
+					}
+					&.middle {
+						position: relative;
+						top: 50%;
+						transform: translateY(-50%);
+					}
+
+				}
+
+			}//End .column
+		}
+
+		&.right {
+			float: right;
+		}
+
+		.cardTypeContainer {
+			padding: 15%;
+			position: absolute;
+			display: inline-block;
+			text-align: center;
+
+			&.top {
+				top: 0;
+				.cardSuit {
+					margin-top: -0.2em;
+				}
+			}
+			&.bottom {
+				bottom: 0;
+				.cardSuit {
+					margin-bottom: -0.2em;
+					transform: rotateX(180deg);
+				}
+				.cardValue {
+					transform: rotate(180deg);
+				}
+			}
+
+			&.left {
+				left: 0;
+
+			}
+			&.right {
+				right: 0;
+			}
+
+			.cardValue {
+				height: 1em;
+			}
+		}
+	}
+
+	&.valueA {
+		.container {
+			&.left {
+				
+			}
+			&.middle {
+				width: 100%;
+				position: absolute;
+				left: 0;
+				.column {
+					&.left {
+						width: 0;
+					}
+					&.middle {
+						width: 100%;
+						.cardSuit {
+							font-size: 2.8em;
+						}
+					}
+					&.right {
+						width: 0;
+					}
+				}
+			}
+			&.right {
+				
+			}
+		}
+			
+	}
+
+	&.value7 {
+		.container.middle .column.middle .cardSuit.value7 {
+			position: relative;
+			top: 25%;
+			transform: translateY(-25%);
+		}
+	}
+	&.value8 {
+		.column.middle .value8 {
+			&.top {
+				position: relative;
+				top: 25%;
+				transform: translateY(-25%);
+			}
+			&.bottom {
+				position: relative;
+				top: 78%;
+				transform: translateY(-178%) rotateX(180deg);
+			}
+
+		}  
+	}
+
+	&.value10 {
+		.column.middle .value10 {
+			&.top {
+				position: relative;
+				top: 20%;
+				transform: translateY(-20%);
+			}
+
+			&.bottom {
+				position: relative;
+				top: 83%;
+				transform: translateY(-183%) rotateX(180deg);
+			}
+		}
+	}
+
+	&.clubs, &.spades {
+		color: $black;
+	}
+
+	&.hearts, &.diamonds {
+		color: $red;
+	}
+}	

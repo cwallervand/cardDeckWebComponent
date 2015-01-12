@@ -1,0 +1,22 @@
+{
+  "name": "webComponents",
+  "version": "1.0.0",
+  "authors": [
+    "Christian Wallervand <cwallervand@gmail.com>"
+  ],
+  "description": "Exploring web components",
+  "keywords": [
+    "webcomponents"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}

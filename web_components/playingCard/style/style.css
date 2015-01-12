@@ -1,0 +1,127 @@
+:host {
+  position: relative;
+  display: inline-block;
+  font-size: 1em; }
+
+#card {
+  border: 1px solid #CCC;
+  width: 100%;
+  -webkit-border-radius: 5%;
+  -moz-border-radius: 5%;
+  -o-border-radius: 5%;
+  -ms-border-radius: 5%;
+  border-radius: 5%;
+  position: relative; }
+  #card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  #card .container {
+    position: relative;
+    height: 100%;
+    display: inline-block; }
+    #card .container.left, #card .container.right {
+      width: 20%; }
+    #card .container.left {
+      float: left; }
+    #card .container.middle {
+      float: left;
+      width: 60%;
+      height: 100%;
+      font-size: 1.7em; }
+      #card .container.middle .column {
+        width: 33.3%;
+        height: 100%;
+        display: inline-block;
+        position: relative; }
+        #card .container.middle .column.left {
+          float: left;
+          text-align: left; }
+        #card .container.middle .column.middle {
+          float: left;
+          text-align: center; }
+        #card .container.middle .column.right {
+          float: right;
+          text-align: right; }
+        #card .container.middle .column .cardSuit {
+          display: none;
+          position: absolute;
+          width: 100%; }
+          #card .container.middle .column .cardSuit.top {
+            top: 0; }
+          #card .container.middle .column .cardSuit.topNext {
+            top: 33%;
+            transform: translateY(-33%);
+            position: relative; }
+          #card .container.middle .column .cardSuit.bottomPrev {
+            bottom: 23%;
+            transform: rotateX(180deg); }
+          #card .container.middle .column .cardSuit.bottom {
+            bottom: 0;
+            transform: rotateX(180deg); }
+          #card .container.middle .column .cardSuit.middle {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%); }
+    #card .container.right {
+      float: right; }
+    #card .container .cardTypeContainer {
+      padding: 15%;
+      position: absolute;
+      display: inline-block;
+      text-align: center; }
+      #card .container .cardTypeContainer.top {
+        top: 0; }
+        #card .container .cardTypeContainer.top .cardSuit {
+          margin-top: -0.2em; }
+      #card .container .cardTypeContainer.bottom {
+        bottom: 0; }
+        #card .container .cardTypeContainer.bottom .cardSuit {
+          margin-bottom: -0.2em;
+          transform: rotateX(180deg); }
+        #card .container .cardTypeContainer.bottom .cardValue {
+          transform: rotate(180deg); }
+      #card .container .cardTypeContainer.left {
+        left: 0; }
+      #card .container .cardTypeContainer.right {
+        right: 0; }
+      #card .container .cardTypeContainer .cardValue {
+        height: 1em; }
+  #card.valueA .container.middle {
+    width: 100%;
+    position: absolute;
+    left: 0; }
+    #card.valueA .container.middle .column.left {
+      width: 0; }
+    #card.valueA .container.middle .column.middle {
+      width: 100%; }
+      #card.valueA .container.middle .column.middle .cardSuit {
+        font-size: 2.8em; }
+    #card.valueA .container.middle .column.right {
+      width: 0; }
+  #card.value7 .container.middle .column.middle .cardSuit.value7 {
+    position: relative;
+    top: 25%;
+    transform: translateY(-25%); }
+  #card.value8 .column.middle .value8.top {
+    position: relative;
+    top: 25%;
+    transform: translateY(-25%); }
+  #card.value8 .column.middle .value8.bottom {
+    position: relative;
+    top: 78%;
+    transform: translateY(-178%) rotateX(180deg); }
+  #card.value10 .column.middle .value10.top {
+    position: relative;
+    top: 20%;
+    transform: translateY(-20%); }
+  #card.value10 .column.middle .value10.bottom {
+    position: relative;
+    top: 83%;
+    transform: translateY(-183%) rotateX(180deg); }
+  #card.clubs, #card.spades {
+    color: black; }
+  #card.hearts, #card.diamonds {
+    color: red; }
+
+/*# sourceMappingURL=style.css.map */

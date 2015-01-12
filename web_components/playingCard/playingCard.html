@@ -1,0 +1,281 @@
+<!-- Import dependencies, everything can be a component -->
+<!-- Resources on other origins must be CORS-enabled. -->
+<!-- <link rel="import" href="../javascriptLibs/jquery/jquery.html" /> -->
+<!-- The template for the playing card -->
+<template id="playingCard">
+	<!-- link-tag is not supported -->
+	<style>
+        /*Import CSS for the Web Component*/
+		@import "web_components/playingCard/style/style.css?v=ssf";
+
+	</style>
+    <!-- standard markup -->
+    <div id="card">
+
+        <div class="container left">
+            <div class="cardTypeContainer top left">
+                <div class="cardValue"></div>
+                <div class="cardSuit"></div>
+            </div>
+            <div class="cardTypeContainer bottom left">
+                <div class="cardSuit"></div>
+                <div class="cardValue"></div>
+            </div>
+        </div>
+
+        <div class="container middle">
+            <ul class="column left">
+                <li class="cardSuit value4 value5 value6 value7 value8 value9 value10 top"></li>
+                <li class="cardSuit value9 value10 topNext"></li>
+                <li class="cardSuit value6 value7 value8 middle"></li>
+                <li class="cardSuit value9 value10 bottomPrev"></li>
+                <li class="cardSuit value4 value5 value6 value7 value8 value9 value10 bottom"></li>
+            </ul>
+            <ul class="column middle">
+                <li class="cardSuit value2 value3 value7 value8 value10 top"></li>
+                <li class="cardSuit valueA value3 value5 value9 middle"></li>
+                <li class="cardSuit value2 value3 value8 value10 bottom"></li>
+            </ul>
+            <ul class="column right">
+                <li class="cardSuit value4 value5 value6 value7 value8 value9 value10 top"></li>
+                <li class="cardSuit value9 value10 topNext"></li>
+                <li class="cardSuit value6 value7 value8 middle"></li>
+                <li class="cardSuit value9 value10 bottomPrev"></li>
+                <li class="cardSuit value4 value5 value6 value7 value8 value9 value10 bottom"></li>
+            </ul>
+        </div>
+
+        <div class="container right">
+            <div class="cardTypeContainer top right">
+                <div class="cardValue"></div>
+                <div class="cardSuit"></div>
+            </div>
+        
+            <div class="cardTypeContainer bottom right">
+                <div class="cardSuit"></div>
+                <div class="cardValue"></div>
+            </div>
+        </div>
+	</div>
+</template>
+<!-- Define the web component in JavaScript -->
+<script type="text/javascript">
+
+(function() {
+
+    //importDoc references this document
+    var importDoc = document.currentScript.ownerDocument;
+    console.log('importDoc', importDoc);
+
+    // Define and register <playing-card> that uses Shadow DOM and a template.
+    var protoElement = Object.create(HTMLElement.prototype, {
+        //Functions defined here are exposed, dont know how to make functions private
+        //Attributes on the element
+        suit: {
+            //Called when .suit = x is used
+            set: function(suit) {
+                var self = this;
+
+                var cardSuitClassElems = 
+                    this.root.getElementById('card').getElementsByClassName('cardSuit');
+
+                var setSuit = function(suitName, innerHtml) {
+                    self.root.getElementById('card').className = suitName;
+                    self.setAttribute('suit', suitName);
+                    for (var i = 0; i < cardSuitClassElems.length; i++) {
+                        cardSuitClassElems[i].innerHTML = innerHtml;
+                    }
+                }
+
+                switch(suit) {
+                    case "spades":
+                        setSuit(suit, '&spades;');
+                        break;
+                    case "clubs":
+                        setSuit(suit, '&clubs;');
+                        break;
+                    case "hearts":
+                        setSuit(suit, '&hearts;');
+                        break;
+                    case "diamonds": {
+                        setSuit(suit, '&diams;');
+                        break;
+                    }
+                }
+            },
+            //Called when .suit is used
+            get: function() {
+                return this.getAttribute('suit');
+            }
+        },
+        cardValue: {
+            set: function(cardValue) {
+                this.setAttribute('cardValue', cardValue);
+            },
+            get: function() {
+                return this.getAttribute('cardValue');
+            }
+        },
+        width: {
+            set: function(width) {
+                this.setAttribute('width', width);
+                this.style.width = width + 'px';
+            },
+            get: function() {
+                return this.getAttribute('width');
+            }
+        },
+        numericValue: {
+            set: function(value) {
+                if(!this.attributeExists("numericValue")) {
+                    switch(value) {
+                        case "J":
+                            this.setAttribute("numericValue", 11);
+                            break;
+                        case "Q":
+                            this.setAttribute("numericValue", 12);
+                            break;
+                        case "K":
+                            this.setAttribute("numericValue", 13);
+                            break;
+                        case "A":
+                            this.setAttribute("numericValue", 14);
+                            break;
+                        default:
+                            this.setAttribute("numericValue", parseInt(value));
+                            break;
+                    }
+                }
+            },
+            get: function() {
+                return this.getAttribute('numericValue');
+            }
+        },
+        altNumericValue: {
+            set: function(value) {
+                if(!this.attributeExists("altNumericValue")) {
+
+                    switch(value) {
+                        case "J":
+                            this.setAttribute("altNumericValue", 11);
+                            break;
+                        case "Q":
+                            this.setAttribute("altNumericValue", 12);
+                            break;
+                        case "K":
+                            this.setAttribute("altNumericValue", 13);
+                            break;
+                        case "A":
+                            this.setAttribute("altNumericValue", 1);
+                            break;
+                        default:
+                            this.setAttribute("altNumericValue", parseInt(value));
+                            break;
+                    }
+                }
+            },
+            get: function() {
+                return this.getAttribute('altNumericValue');
+            }
+        },
+        //Functions
+        attributeExists: {
+            value: function(attributeName) {
+                
+                var attribute = this.getAttribute(attributeName);
+                return attribute !== null && 
+                    typeof(attribute) !== 'undefined' &&
+                    (typeof(attribute) === 'string' && attribute !== 'NaN')
+            }
+        },
+        renderSuitAndValue: {
+            value: function() {
+                var self = this;
+
+                var cardElem = this.root.getElementById('card');
+
+                var cardTypeContainerClassElements = cardElem.getElementsByClassName('cardTypeContainer');
+
+                for (var i = 0; i < cardTypeContainerClassElements.length; i++) {
+                    cardTypeContainerClassElements[i].getElementsByClassName('cardValue')[0].innerHTML = 
+                        self.cardValue;
+                }
+
+                cardElem.className += ' value'+self.cardValue;
+
+                var suitIconsToBeRendered = this.root.querySelectorAll('.container.middle .value'+self.cardValue);
+
+                for (var i = 0; i < suitIconsToBeRendered.length; i++) {
+                    suitIconsToBeRendered[i].style.display = 'block';
+                }
+            }
+        },
+        setSize: {
+            value: function() {
+                var cardWidth;
+                if (this.attributeExists("width")) {
+                    cardWidth = this.width;
+                    this.root.getElementById('card').style.width = cardWidth+'px';
+                }
+                else {
+                    cardWidth = 200;
+                    this.width = 200;
+                    this.root.getElementById('card').style.width = cardWidth+'px';
+                }
+                this.root.getElementById('card').style.height = (cardWidth * this.heightRatio)+'px';
+            }
+        }
+    });
+    //Set up Shadow DOM
+    //Method is called when an instance of the element is created (i.e. the HTML parser reads the tag)
+    protoElement.createdCallback = function() {
+        //Get template from the link import in this document
+        this.template = importDoc.querySelector('template#playingCard');
+
+        //The main document
+        this.mainDoc = document;
+        console.log('mainDoc', this.mainDoc);
+
+        //Copy the <template> content, true = also import descendants of the node
+        this.clone = document.importNode(this.template.content, true);
+
+        //Create the Shadow Root
+        this.root = this.createShadowRoot();
+
+        //Append the template to the Shadow Root
+        this.root.appendChild(this.clone);
+
+        //Height ratio of card
+        this.heightRatio = 1.4;
+
+        //set numericValue and altNumericValue based on cardValue
+        this.numericValue = this.getAttribute('cardValue');
+        this.altNumericValue = this.getAttribute('cardValue');
+        this.cardValue = this.getAttribute('cardValue');
+        this.suit = this.getAttribute('suit');
+    };
+
+    //Called when an attribute for the element changes
+    protoElement.attributeChangedCallback = function(attrName, oldVal, newVal) {
+        /*switch(attrName) {
+            case 'cardValue':
+                this.numericValue = newVal;
+                break;
+            case 'width':
+                //this.width = newVal;
+                //this.setSize();
+                break;
+        }*/
+    }
+
+    //Called when an instance was inserted into the document
+    protoElement.attachedCallback = function() {
+        //Rendering operations
+        this.setSize();
+        this.renderSuitAndValue();
+        
+    }
+
+    document.registerElement('playing-card', {prototype: protoElement});
+})();
+</script>

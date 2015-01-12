@@ -1,0 +1,191 @@
+
+<!--<link rel="import" href="../javascriptLibs/jquery/jquery.html" />-->
+<!-- Import the playing card component -->
+<link rel="import" href="../playingCard/playingCard.html" />
+
+<template id="cardDeck">
+    <style>
+        /*Import CSS for this component*/
+        @import "web_components/cardDeck/style/style.css?v=ffsfdf";
+    </style>
+    <div id="deck"></div>
+</template>
+
+<script type="text/javascript">
+
+(function() {
+
+    //importDoc references this document
+    var importDoc = document.currentScript.ownerDocument;
+
+    var protoElement = Object.create(HTMLElement.prototype, {
+        //Properties
+        width: {
+            set: function(width) {
+                this.setAttribute('width', width);
+                this.style.width = width + 'px';
+            },
+            get: function() {
+                return this.getAttribute('width');
+            }
+        },
+        //The Fisher-Yates shuffle algorithm
+        //Functions
+        shuffle: {
+            value: function() {
+                var j, x;
+                for (var i = this.cardDeck.length; i > 0; i--) {
+                    j = parseInt(Math.random() * i);
+                    x = this.cardDeck[i - 1];
+                    this.cardDeck[i - 1] = this.cardDeck[j];
+                    this.cardDeck[j] = x;
+                }
+                return this.cardDeck;
+            }
+        },
+        drawCard: {
+            value: function() {
+                var card =  this.cardDeck.pop();
+                var cardValue =  card.value;
+                var cardSuit = card.suit;
+
+                return this.createCardEl(cardValue, cardSuit)
+
+            }
+        },
+        cut: {
+            value: function(atCard) {
+                var topHalf;
+                var bottomHalf;
+                if (typeof(atCard) === 'undefined') {
+                    topHalf = this.cardDeck.slice(0, Math.floor(this.cardDeck.length / 2));
+                    bottomHalf = this.cardDeck.slice(Math.floor(this.cardDeck.length / 2), 
+                        this.cardDeck.length);
+                    this.cardDeck = bottomHalf.concat(topHalf);
+                }
+                if (atCard >= 1 && atCard <= 52) {
+                    topHalf = this.cardDeck.slice(0, atCard);
+                    bottomHalf = this.cardDeck.slice(atCard, this.cardDeck.length);
+                    this.cardDeck = bottomHalf.concat(topHalf);
+                }
+                return this.cardDeck;
+
+            }
+        },
+        createNewDeck: {
+            value: function() {
+                this.cardDeck = new Array( 
+                    {value: "A", suit: "spades"},
+                    {value: "2", suit: "spades"},
+                    {value: "3", suit: "spades"},
+                    {value: "4", suit: "spades"},
+                    {value: "5", suit: "spades"},
+                    {value: "6", suit: "spades"},
+                    {value: "7", suit: "spades"},
+                    {value: "8", suit: "spades"},
+                    {value: "9", suit: "spades"},
+                    {value: "10", suit: "spades"},
+                    {value: "J", suit: "spades"},
+                    {value: "Q", suit: "spades"},
+                    {value: "K", suit: "spades"},
+                    {value: "A", suit: "hearts"},
+                    {value: "2", suit: "hearts"},
+                    {value: "3", suit: "hearts"},
+                    {value: "4", suit: "hearts"},
+                    {value: "5", suit: "hearts"},
+                    {value: "6", suit: "hearts"},
+                    {value: "7", suit: "hearts"},
+                    {value: "8", suit: "hearts"},
+                    {value: "9", suit: "hearts"},
+                    {value: "10", suit: "hearts"},
+                    {value: "J", suit: "hearts"},
+                    {value: "Q", suit: "hearts"},
+                    {value: "K", suit: "hearts"},
+                    {value: "A", suit: "diamonds"},
+                    {value: "2", suit: "diamonds"},
+                    {value: "3", suit: "diamonds"},
+                    {value: "4", suit: "diamonds"},
+                    {value: "5", suit: "diamonds"},
+                    {value: "6", suit: "diamonds"},
+                    {value: "7", suit: "diamonds"},
+                    {value: "8", suit: "diamonds"},
+                    {value: "9", suit: "diamonds"},
+                    {value: "10", suit: "diamonds"},
+                    {value: "J", suit: "diamonds"},
+                    {value: "Q", suit: "diamonds"},
+                    {value: "K", suit: "diamonds"},
+                    {value: "A", suit: "clubs"},
+                    {value: "2", suit: "clubs"},
+                    {value: "3", suit: "clubs"},
+                    {value: "4", suit: "clubs"},
+                    {value: "5", suit: "clubs"},
+                    {value: "6", suit: "clubs"},
+                    {value: "7", suit: "clubs"},
+                    {value: "8", suit: "clubs"},
+                    {value: "9", suit: "clubs"},
+                    {value: "10", suit: "clubs"},
+                    {value: "J", suit: "clubs"},
+                    {value: "Q", suit: "clubs"},
+                    {value: "K", suit: "clubs"}
+                );
+                this.shuffle();
+            }
+        },
+        setSize: {
+            value: function() {
+                var width;
+                if (this.attributeExists("width")) {
+                    width = this.width;
+                    this.root.getElementById('deck').style.width = width+'px';
+                }
+                else {
+                    width = 200;
+                    this.root.getElementById('deck').style.width = width+'px';
+                }
+                this.root.getElementById('deck').style.height = (width * this.heightRatio)+'px';
+            }
+        },
+        createCardEl: {
+            value: function(cardValue, suit) {
+                var playingCard = document.createElement("playing-card");
+                playingCard.cardValue = cardValue;
+                playingCard.suit = suit;
+                playingCard.width = this.width;
+                return playingCard;
+            }
+        },
+        attributeExists: {
+            value: function(attributeName) {
+                var attribute = this.getAttribute(attributeName);
+                return attribute !== null && 
+                    typeof(attribute) !== 'undefined' &&
+                    !(typeof(attribute) === 'string' && attribute === 'NaN')
+            }
+        },
+    });
+
+    protoElement.createdCallback = function() {
+        this.heightRatio = 1.4;
+
+        this.createNewDeck();
+
+        //Get template in import
+        this.template = importDoc.querySelector('template#cardDeck');
+
+        //The main document
+        this.mainDoc = document;
+
+        // import template into
+        this.clone = document.importNode(this.template.content, true);
+
+        this.root = this.createShadowRoot();
+        this.root.appendChild(this.clone); 
+    };
+
+    protoElement.attachedCallback = function() {
+        this.setSize();
+    }
+
+    document.registerElement('card-deck', {prototype: protoElement});
+})();
+</script>

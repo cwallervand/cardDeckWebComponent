@@ -1,0 +1,7 @@
+bower_components
+test.py
+web_components/cardDeck/style/.sass-cache
+web_components/cardDeck/style/style.css.map
+web_components/cssFramework/.sass-cache
+web_components/playingCard/style/.sass-cache
+web_components/playingCard/style/style.css.map

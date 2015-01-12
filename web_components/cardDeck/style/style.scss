@@ -1,0 +1,19 @@
+@import	 "../../cssFramework/mixins";
+
+:host {
+	display: inline-block;
+}
+#deck {
+
+	@include border-radius(5%);
+	background-image: url("../assets/cardBack.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: -5%;
+
+	playing-card {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+}

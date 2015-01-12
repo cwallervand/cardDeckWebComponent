@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebComponents Exploration</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script async>
+      function handleImportLoad(e) {
+        //console.log("Import loaded successfully", e);
+      }
+
+      function handleImportError(e) {
+        //console.log('Error loading import: ', e);
+      }
+    </script>
+    <!-- import the Web Components -->
+    <link rel="import" href="./web_components/javascriptLibs/jquery/jquery.html" />
+    <link id="cardDeckLink" rel="import" href="web_components/cardDeck/cardDeck.html" 
+      onload="handleImportLoad(event)" 
+      onerror="handleImportError(event)"/>
+    <!--<link id="playingCardLink" rel="import" href="web_components/playingCard/playingCard.html" 
+      onload="handleImportLoad(event)" 
+      onerror="handleImportError(event)"/>-->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .dealerCards {
+        position: relative;
+        left: 200px;
+        right: 0px;
+        top: 0;
+        width: calc(100% - 200px);
+      }
+
+      card-deck {
+        float: left;
+      }
+
+      playing-card {
+        margin-right: 15px;
+        font-size: 2em;
+      }
+      .dealerCards, .playerCards {
+          height: 300px;
+      }
+      .playingCardContainer {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main">
+        <div class="dealerRack">
+          <card-deck id="cardDeck" width="200"></card-deck>
+          <div class="dealerCards"></div>
+          <div class="playerPoints">You have <span class="points">0</span> points</div>
+        </div>
+
+        <div class="actions">
+          <input type="button" id="newGameBtn" value="New Game" />
+          <input type="button" id="shuffleDeckBtn" value="Shuffle" />
+          <input type="button" id="cutBtn" value="Cut deck" />
+
+          <input type="button" id="drawCardBtn" value="Hit me" />
+          <input type="button" id="checkBtn" value="I'm good" />
+        </div>
+
+        <div class="playerCards"></div>
+    </div>
+    <div class="playingCardContainer">
+      <!-- The playing card element, with custom attributes -->
+      <!--<playing-card id="testCard" suit="diamonds" cardValue="4" width="200"></playing-card>-->
+    </div>
+    <script type="text/javascript">
+      //Game logic and interaction
+      var deck = document.getElementById('cardDeck');
+
+    /*var testCard = document.getElementById('testCard');
+      console.log('testCard, suit:', testCard.suit, 
+        'numericValue:', testCard.numericValue,
+        'altNumericValue',testCard.altNumericValue,
+        'value', testCard.cardValue);*/
+
+      var player = {
+        score: 0,
+        cards: []
+      }
+
+      var dealer = {
+        score: 0,
+        cards: []
+      }
+
+      $('#shuffleDeckBtn').click(function() {
+        //Methods on the card deck are exposed to the user so we can call on the shuffle function,
+        //just like you can call play() on the video element
+        deck.shuffle();
+      });
+
+      $('#drawCardBtn').click(function() {
+        
+        var card = drawCard();
+        
+        //Apend the card to the markup
+        $('.playerCards').append(card);
+        
+        addPoints(player, card);
+        //Bust logic
+        if (player.score > 21) {
+          window.setTimeout(function() {
+            window.alert("Bust, the house takes the pot!");
+          }, 100)
+          
+        }
+
+         $('.playerPoints .points').html(player.score);
+      });
+
+      $('#cutBtn').click(function(){
+        deck.cut(26);
+        $(this).attr('disabled', 'disabled');
+      });
+
+      $('#newGameBtn').click(function() {
+        newGame();
+      });
+
+      $('#checkBtn').click(function() {
+        $('#drawCardBtn').attr('disabled', 'disabled');
+        //Dealer draws as long as hw has 17 points or less
+        while(dealer.score <= 17) {
+          var card = drawCard();
+          addPoints(dealer, card);
+           $('.dealerCards').append(card);
+        }
+
+        if (player.score > dealer.score || dealer.score > 21) {
+          window.alert("You win with " + player.score + ". The dealer has " + dealer.score);
+        }
+        else {
+          window.alert("The house wins with " + dealer.score + ". You have " + player.score);
+        }
+
+      });
+
+      var newGame = function() {
+        //Again using the carddeck API
+        deck.createNewDeck();
+        player.score = 0;
+        player.cards = [];
+        dealer.score = 0;
+        dealer.cards = [];
+        $('#cutBtn').removeAttr('disabled');
+        $('#checkBtn').removeAttr('disabled');
+        $('#drawCardBtn').removeAttr('disabled');
+        $('.playerCards').empty();
+        $('.dealerCards').empty();
+        $('.playerPoints .points').html("0");
+      }
+
+      var addPoints = function(player, card) {
+
+        var point = parseInt(card.numericValue);
+        player.cards.push(card.cardValue);
+
+        player.score += point;//parseInt(card.numericValue);
+
+        if (player.score > 21 && player.cards.indexOf("A") > -1) {
+            for (var i = 0; i < player.cards.length; i++) {
+              if (player.cards[i] === 'A' && player.score > 21) {
+                player.score -= 10;
+              } 
+            }
+        }
+      
+      }
+
+      var drawCard = function() {
+        //Using the deck API
+        var card = deck.drawCard();
+
+        //Set card numeric values for the game
+        if (card.cardValue === 'A') {
+            //card.setAttribute("numericValue", 11);
+            card.numericValue = 11;
+            //card.setAttribute("altNumericValue", 1);
+            card.altNumericValue = 1;
+        }
+        else if(card.cardValue === 'J' || 
+                card.cardValue === 'Q' ||
+                card.cardValue === 'K') {
+            //card.setAttribute("numericValue", 10);
+          card.numericValue = 10;
+            //card.setAttribute("altNumericValue", 10);
+            card.altNumericValue = 10;
+        } 
+        else {
+          //card.setAttribute("numericValue", parseInt(card.getAttribute("value")));
+          card.numericValue = parseInt(card.cardValue);
+          //card.setAttribute("altNumericValue", parseInt(card.getAttribute("value")));
+          card.altNumericValue = parseInt(card.cardValue);
+        }
+
+        console.log("DRAW CARD CLICKED", 
+                    "VALUE", card.cardValue, 
+                    "SUIT", card.suit,
+                    "NUMERIC", card.numericValue);
+
+        return card;
+      }
+
+
+    </script>
+  </body> 
+</html>

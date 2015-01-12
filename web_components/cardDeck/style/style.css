@@ -1,0 +1,19 @@
+:host {
+  display: inline-block; }
+
+#deck {
+  -webkit-border-radius: 5%;
+  -moz-border-radius: 5%;
+  -o-border-radius: 5%;
+  -ms-border-radius: 5%;
+  border-radius: 5%;
+  background-image: url("../assets/cardBack.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: -5%; }
+  #deck playing-card {
+    position: absolute;
+    top: 0;
+    left: 0; }
+
+/*# sourceMappingURL=style.css.map */
